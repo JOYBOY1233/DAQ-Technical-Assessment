@@ -6,4 +6,10 @@ This file is used to document your thoughts, approaches and research conducted a
 
 ## Spyder
 
+I added the nodemon execution for only the dev script whenever the dev script is run.
+
+
+
+
+
 ## Cloud
