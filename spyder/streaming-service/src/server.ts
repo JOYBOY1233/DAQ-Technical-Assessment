@@ -1,5 +1,6 @@
 import net from "net";
 import { WebSocket, WebSocketServer } from "ws";
+import { validateData } from "./helperFunctions";
 
 interface VehicleData {
   battery_temperature: number | string;
@@ -15,16 +16,28 @@ tcpServer.on("connection", (socket) => {
   console.log("TCP client connected");
 
   socket.on("data", (msg) => {
+
     const message: string = msg.toString();
 
-    console.log(`Received: ${message}`);
-    
-    // Send JSON over WS to frontend clients
-    websocketServer.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
+    //Function to conduct a check for the correct format of the msg data received
+    const parsedData : VehicleData = JSON.parse(message)
+    if (!validateData(parsedData)) {
+
+      console.log(`Invalid data received! ${message}`)
+
+    } else {
+      
+      console.log(`Received: ${message}`);
+      
+      // Send JSON over WS to frontend clients
+      websocketServer.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(message);
+        }
+      });
+
+    }
+
   });
 
   socket.on("end", () => {
