@@ -13,6 +13,7 @@ Step 2:
 - Everytime that invalid data is passed i print to the terminal that invalid data was passed and the time at which it was passed similar to how it displays when valid data is passed.
 
 Step 3:
-- 
+- I added a helper function called alertFunciton that monitors the temperature of the battery and warns the user when the temp exceeds the limits 3 times within a 5 second window. 
+
 
 ## Cloud

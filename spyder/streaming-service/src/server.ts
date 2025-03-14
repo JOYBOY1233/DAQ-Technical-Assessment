@@ -1,6 +1,6 @@
 import net from "net";
 import { WebSocket, WebSocketServer } from "ws";
-import { validateData } from "./helperFunctions";
+import { alertFunction, validateData } from "./helperFunctions";
 
 interface VehicleData {
   battery_temperature: number | string;
@@ -12,22 +12,24 @@ const WS_PORT = 8080;
 const tcpServer = net.createServer();
 const websocketServer = new WebSocketServer({ port: WS_PORT });
 
+//an array to keep track of the timestamps at which the temp exceeded the allowable range
+let exceededTimestamps: number[] =  [];
+
 tcpServer.on("connection", (socket) => {
   console.log("TCP client connected");
 
   socket.on("data", (msg) => {
 
     const message: string = msg.toString();
-
-    //Function to conduct a check for the correct format of the msg data received
+    
     const parsedData : VehicleData = JSON.parse(message)
-    if (!validateData(parsedData)) {
 
-      console.log(`Invalid data received! ${message}`)
-
-    } else {
-      
+    try {
       console.log(`Received: ${message}`);
+      //Function to conduct a check for the correct format of the msg data received
+      validateData(parsedData)
+      //Function to check if the limit is exceeded 
+      exceededTimestamps = alertFunction(parsedData, exceededTimestamps)
       
       // Send JSON over WS to frontend clients
       websocketServer.clients.forEach(function each(client) {
@@ -35,6 +37,12 @@ tcpServer.on("connection", (socket) => {
           client.send(message);
         }
       });
+      
+    } catch (error) {
+
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
 
     }
 
