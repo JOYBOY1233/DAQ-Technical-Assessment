@@ -1,3 +1,5 @@
+import net from "net";
+import { WebSocket, WebSocketServer } from "ws";
 
 interface VehicleData {
   battery_temperature: number | string;
@@ -28,7 +30,7 @@ export function validateData(data: VehicleData) : boolean {
   return true;
 }
 
-export function alertFunction(parsedData: VehicleData, exceededTimestamps: number[]) : number[] {
+export function alertFunction(parsedData: VehicleData, exceededTimestamps: number[], websocketserver: WebSocketServer) : number[] {
 
   const temperature = Number(parsedData.battery_temperature)
   
@@ -44,7 +46,26 @@ export function alertFunction(parsedData: VehicleData, exceededTimestamps: numbe
   if (exceededTimestamps.length > 3) {
     exceededTimestamps.length = 0;
     console.warn("\nThe temperature has exceeded the limits more than 3 times within 5 seconds!\n")
+
+
+    //send warning to frontend server when there is more than 3 alerts in 5 seconds
+    websocketserver.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(
+          JSON.stringify({
+            type: 'alert',
+            message: `Battery temperature exceeded the safe limits more than 3 times within the last 5 seconds!`
+          })
+        );
+      }
+    })
+
+
+
   }
+
+  
+
 
   return exceededTimestamps
 

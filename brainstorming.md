@@ -21,6 +21,9 @@ Step 4:
 Step 5: 
 - I used the Math.round function to round the temperature in the server.ts file
 - I added the conditional colouring of the number using the cn() function in the numeric.tsx file
+- I added the warning TSX in the page.tsx so that a warning is displayed on the front end for when the temperature exceeds the limit more than 3 times within 5 seconds
+- I imported the X close button from the lucide-react
+- I modified my helper funciton to send warning to the ws client
 
 Note:
 - I decided to not use error but warnings because the temp limit exceeding isnt really an error, but more a warning.

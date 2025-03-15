@@ -6,7 +6,7 @@ import { useTheme } from "next-themes"
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Thermometer } from "lucide-react"
+import { Thermometer, X } from "lucide-react"
 import Numeric from "../components/custom/numeric"
 import RedbackLogoDarkMode from "../../public/logo-darkmode.svg"
 import RedbackLogoLightMode from "../../public/logo-lightmode.svg"
@@ -28,7 +28,8 @@ export default function Page(): JSX.Element {
   const { setTheme } = useTheme()
   const [temperature, setTemperature] = useState<any>(0)
   const [connectionStatus, setConnectionStatus] = useState<string>("Disconnected")
-  const { lastJsonMessage, readyState }: { lastJsonMessage: VehicleData | null; readyState: ReadyState } = useWebSocket(
+  const [warning, setWarning] = useState<string | null>(null)  // Warning state
+  const { lastJsonMessage, readyState }: { lastJsonMessage: any | null; readyState: ReadyState } = useWebSocket(
     WS_URL,
     {
       share: false,
@@ -68,6 +69,14 @@ export default function Page(): JSX.Element {
       return
     }
     setTemperature(lastJsonMessage.battery_temperature)
+    const newTemperature = lastJsonMessage.battery_temperature
+
+
+    // Handle alert messages
+  if (lastJsonMessage.type === "alert") {
+    setWarning(lastJsonMessage.message);
+  }
+
   }, [lastJsonMessage])
 
   /**
@@ -91,6 +100,14 @@ export default function Page(): JSX.Element {
         </Badge>
       </header>
       <main className="flex-grow flex items-center justify-center p-8">
+      {warning && (
+              <div className="absolute top-4 bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                <span>{warning}</span>
+                <button onClick={() => setWarning(null)}>
+                  <X className="h-4 w-4 text-white" />
+                </button>
+              </div>
+            )}
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl font-light flex items-center gap-2">
