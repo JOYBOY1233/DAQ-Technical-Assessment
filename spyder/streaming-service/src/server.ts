@@ -24,8 +24,14 @@ tcpServer.on("connection", (socket) => {
     const parsedData : VehicleData = JSON.parse(message)
 
     console.log(`Received: ${message}`);
+
+    
+
     //Function to conduct a check for the correct format of the msg data received
     if (validateData(parsedData)) {
+      //Round the temperature to 3 decimal places
+      const roundedTemperature = Math.round(Number(parsedData.battery_temperature) * 1000) / 1000;
+      parsedData.battery_temperature = roundedTemperature;
 
       //Function to check if the limit is exceeded 
       exceededTimestamps = alertFunction(parsedData, exceededTimestamps)
@@ -33,7 +39,8 @@ tcpServer.on("connection", (socket) => {
       // Send JSON over WS to frontend clients
       websocketServer.clients.forEach(function each(client) {
         if (client.readyState === WebSocket.OPEN) {
-          client.send(message);
+          //converitng the object to a string here
+          client.send(JSON.stringify(parsedData));
         }
       });
 
