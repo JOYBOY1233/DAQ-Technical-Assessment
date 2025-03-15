@@ -18,6 +18,9 @@ Step 3:
 Step 4: 
 - I added readyState to the dependency array of the hook in page.tsx in order for the hook to run every time the state of readyState changes. Now the status of the connection updates. 
 
+Step 5: 
+- I used the Math.round function to round the temperature in the server.ts file
+
 Note:
 - I decided to not use error but warnings because the temp limit exceeding isnt really an error, but more a warning.
 - for some reason i need to run npm run-dev in the ui directory for the wesbite updating step to happen (i.e for connecting to change to connected and for overall changes to code to be reflected on the website). But the docker file in ui does not do this therefore i modified the docker.yml file in the spyder directory to do "npm run dev" for building the ui. Im not sure why i need to do this however so this needs to be investigated. But for now it allows for hot reloading and also updates the conncection status.
