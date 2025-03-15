@@ -35,6 +35,7 @@ export default function Page(): JSX.Element {
       shouldReconnect: () => true,
     },
   )
+  
 
   /**
    * Effect hook to handle WebSocket connection state changes.

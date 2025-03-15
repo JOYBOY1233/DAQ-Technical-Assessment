@@ -1,6 +1,14 @@
+import {cn} from "@/lib/utils"
 interface TemperatureProps {
   temp: any;
 }
+
+const getTemperatureColor = (temp: number) => {
+    if (temp < 20 || temp > 80) return 'text-red-500';   // too high or too low
+    if (temp >= 25 && temp <= 75) return 'text-green-500';  // good range
+    if ((temp < 25 && temp>= 20) || temp > 75 && temp <=80 ) return 'text-yellow-500'; // too high
+    return 'text-gray-500';  // default color if temp is not set
+  }
 
 /**
  * Numeric component that displays the temperature value.
@@ -16,9 +24,9 @@ function Numeric({ temp }: TemperatureProps) {
   //  - (or) other solution
 
   // Justify your choice of implementation in brainstorming.md
-
+  const temperatureColor = getTemperatureColor(temp)
   return (
-    <div className="text-foreground text-4xl font-bold">
+    <div className={cn("text-foreground text-4xl font bold",getTemperatureColor(temp))}>
       {`${temp}°C`}
     </div>
   );
