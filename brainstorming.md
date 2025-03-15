@@ -20,6 +20,7 @@ Step 4:
 
 Step 5: 
 - I used the Math.round function to round the temperature in the server.ts file
+- I added the conditional colouring of the number using the cn() function in the numeric.tsx file
 
 Note:
 - I decided to not use error but warnings because the temp limit exceeding isnt really an error, but more a warning.
