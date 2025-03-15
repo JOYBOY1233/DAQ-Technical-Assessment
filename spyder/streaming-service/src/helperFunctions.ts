@@ -13,11 +13,16 @@ export function validateData(data: VehicleData) : boolean {
   //check if the batter_temperature key exists
   if (!data.hasOwnProperty('battery_temperature')) {
     console.warn(("Data is in the wrong format!"))
+    return false
+
   } 
 
   //checking if the temperature variable in data is a number
   if (typeof data.battery_temperature !== 'number') {
+    
     console.warn("Data is in the wrong format!")
+    return false;
+    
   }
 
   return true;
@@ -36,7 +41,7 @@ export function alertFunction(parsedData: VehicleData, exceededTimestamps: numbe
   //filtering out old times
   exceededTimestamps = exceededTimestamps.filter(timestamp => currentTimestamp - timestamp <= 5000);
 
-  if (exceededTimestamps.length > 4) {
+  if (exceededTimestamps.length > 3) {
     exceededTimestamps.length = 0;
     console.warn("\nThe temperature has exceeded the limits more than 3 times within 5 seconds!\n")
   }

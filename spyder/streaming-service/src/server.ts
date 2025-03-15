@@ -20,25 +20,24 @@ tcpServer.on("connection", (socket) => {
 
   socket.on("data", (msg) => {
 
-    const message: string = msg.toString();
-    
+    const message: string = msg.toString();    
     const parsedData : VehicleData = JSON.parse(message)
 
-    
     console.log(`Received: ${message}`);
     //Function to conduct a check for the correct format of the msg data received
-    validateData(parsedData)
-    //Function to check if the limit is exceeded 
-    exceededTimestamps = alertFunction(parsedData, exceededTimestamps)
-    
-    // Send JSON over WS to frontend clients
-    websocketServer.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
+    if (validateData(parsedData)) {
+
+      //Function to check if the limit is exceeded 
+      exceededTimestamps = alertFunction(parsedData, exceededTimestamps)
       
-    
+      // Send JSON over WS to frontend clients
+      websocketServer.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(message);
+        }
+      });
+
+    }
 
   });
 

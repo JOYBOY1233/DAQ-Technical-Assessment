@@ -15,9 +15,7 @@ Step 2:
 Step 3:
 - I added a helper function called alertFunciton that monitors the temperature of the battery and warns the user when the temp exceeds the limits 3 times within a 5 second window. 
 
-
 Note:
-
 - I decided to not use error but warnings because the temp limit exceeding isnt really an error, but more a warning.
 
 ## Cloud
